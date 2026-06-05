@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulasi CPNS - Soal Tersulit</title>
+    <style>
+        /* === DESAIN ESTETIK MODERN === */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,600;1,400&display=swap');
+
+        :root {
+            --primary: #18181b; /* Zinc 900 */
+            --primary-hover: #27272a;
+            --white: #ffffff;
+            --bg-body: #f4f4f5; /* Zinc 100 */
+            --bg-card: rgba(255, 255, 255, 0.95);
+            --text-main: #27272a;
+            --text-muted: #71717a;
+            --border-color: #e4e4e7;
+            --shadow-soft: 0 20px 40px -10px rgba(0,0,0,0.08);
+            --shadow-hover: 0 10px 20px -5px rgba(0,0,0,0.12);
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(255,255,255,0.8) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(0,0,0,0.03) 0px, transparent 50%);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* === LAYOUT UTAMA === */
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            border-top: 1px solid rgba(255,255,255,0.5);
+            border-left: 1px solid rgba(255,255,255,0.5);
+        }
+
+        @media (min-width: 640px) {
+            .container {
+                min-height: auto;
+                border-radius: var(--radius-lg);
+                margin: 40px 20px;
+                box-shadow: var(--shadow-soft);
+            }
+        }
+
+        /* === ANIMASI === */
+        .fade-in { animation: fadeIn 0.8s ease forwards; }
+        .slide-up { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulseAlert {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); color: #ef4444; border-color: #ef4444; }
+            50% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); color: #dc2626; border-color: #dc2626; }
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* === SCREEN STATES === */
+        .screen { display: none; padding: 48px 40px; flex-direction: column; flex-grow: 1; }
+        @media (max-width: 480px) { .screen { padding: 40px 24px; } }
+        .screen.active { display: flex; }
+
+        /* === INPUT NAMA & START SCREEN === */
+        .start-header { font-family: 'Playfair Display', serif; font-size: 2.5rem; line-height: 1.15; margin-bottom: 24px; text-align: center; color: var(--primary); }
+        .start-desc { text-align: center; color: var(--text-muted); margin-bottom: 32px; font-size: 1.05rem; line-height: 1.7; }
+        
+        .input-group { margin-bottom: 32px; width: 100%; }
+        .input-field {
+            width: 100%; padding: 18px 24px; border-radius: var(--radius-md);
+            border: 1px solid var(--border-color); font-size: 1.1rem;
+            font-family: inherit; transition: var(--transition);
+            text-align: center; background: var(--white);
+        }
+        .input-field:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(24, 24, 27, 0.1); }
+
+        /* === QUIZ SCREEN === */
+        .quiz-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 24px; margin-bottom: 32px; position: relative; }
+        .quiz-header::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(to right, transparent, var(--border-color), transparent); }
+        .timer-box { font-size: 1.25rem; font-weight: 600; font-variant-numeric: tabular-nums; padding: 8px 20px; border: 1px solid var(--border-color); border-radius: 30px; background: var(--white); color: var(--primary); transition: var(--transition); box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+        .timer-box.urgent { animation: pulseAlert 1.5s infinite cubic-bezier(0.4, 0, 0.2, 1); }
+
+        .question-text { font-family: 'Playfair Display', serif; font-size: 1.35rem; line-height: 1.6; margin-bottom: 40px; color: var(--primary); }
+        .question-text strong { font-weight: 600; color: var(--primary); background: linear-gradient(120deg, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.06) 100%); background-repeat: no-repeat; background-size: 100% 30%; background-position: 0 88%; }
+
+        /* === OPTIONS === */
+        .options-container { display: flex; flex-direction: column; gap: 16px; margin-bottom: 48px; }
+        .option-btn { background: var(--white); border: 1px solid var(--border-color); padding: 18px 24px; border-radius: var(--radius-md); font-size: 1.05rem; font-family: inherit; color: var(--text-main); text-align: left; cursor: pointer; transition: var(--transition); display: flex; align-items: center; }
+        .option-btn:hover { border-color: var(--text-muted); transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+        .option-btn:active { transform: translateY(0); }
+        .option-btn.selected { background: var(--primary); color: var(--white); border-color: var(--primary); box-shadow: 0 8px 20px rgba(24, 24, 27, 0.25); transform: translateY(-2px); }
+        .option-label { font-weight: 600; margin-right: 16px; opacity: 0.8; }
+
+        /* === BUTTONS === */
+        .btn-primary { background: var(--primary); color: var(--white); border: none; padding: 20px 32px; border-radius: var(--radius-md); font-size: 1.1rem; font-weight: 500; cursor: pointer; transition: var(--transition); letter-spacing: 0.5px; width: 100%; box-shadow: 0 10px 20px rgba(24, 24, 27, 0.15); display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .btn-primary:hover:not(:disabled) { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 15px 25px rgba(24, 24, 27, 0.2); }
+        .btn-primary:active:not(:disabled) { transform: translateY(0); box-shadow: 0 5px 10px rgba(24, 24, 27, 0.15); }
+        .btn-primary:disabled { background: #e4e4e7; color: #a1a1aa; box-shadow: none; cursor: not-allowed; transform: none; }
+        
+        .btn-outline { background: var(--white); color: var(--primary); border: 1px solid var(--border-color); padding: 16px 24px; border-radius: var(--radius-md); font-size: 1.05rem; font-weight: 500; cursor: pointer; transition: var(--transition); width: 100%; margin-bottom: 24px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .btn-outline:hover { border-color: var(--primary); background: #fafafa; }
+
+        /* === RESULT & EXPLANATION SCREEN === */
+        .result-title { font-family: 'Playfair Display', serif; font-size: 3rem; text-align: center; margin-bottom: 12px; letter-spacing: -1px; }
+        .status-benar { color: #10b981; } .status-salah { color: #f43f5e; } .status-waktu { color: var(--text-muted); }
+        .result-subtitle { text-align: center; font-size: 1.1rem; margin-bottom: 32px; color: var(--text-main); }
+
+        .analysis-box { background: var(--white); border: 1px solid var(--border-color); padding: 24px; border-radius: var(--radius-md); margin-bottom: 24px; font-size: 1rem; text-align: left; position: relative; overflow: hidden; display: none; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .analysis-box::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--primary); }
+        .analysis-box.show { display: block; animation: fadeIn 0.6s ease forwards; }
+        .analysis-title { font-weight: 600; margin-bottom: 12px; font-family: 'Playfair Display', serif; font-size: 1.25rem; color: var(--primary); }
+
+        .explanation-box { display: none; background: var(--bg-body); border-radius: var(--radius-md); padding: 32px; margin-bottom: 32px; font-size: 1rem; text-align: left; }
+        .explanation-box.show { display: block; animation: fadeIn 0.6s ease forwards; }
+        .step { margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid rgba(0,0,0,0.05); color: var(--text-main); }
+        .step:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+        .step strong { display: block; margin-bottom: 8px; font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--primary); }
+
+        /* === LEADERBOARD SCREEN === */
+        .leaderboard-container { background: var(--white); border-radius: var(--radius-md); border: 1px solid var(--border-color); overflow: hidden; margin-bottom: 32px; }
+        .lb-row { display: flex; padding: 16px 20px; border-bottom: 1px solid var(--border-color); align-items: center; }
+        .lb-row:last-child { border-bottom: none; }
+        .lb-header { background: var(--bg-body); font-weight: 600; font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        .lb-rank { width: 40px; font-weight: 600; }
+        .lb-name { flex: 1; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 10px; }
+        .lb-score { width: 80px; text-align: right; font-weight: 600; color: var(--primary); }
+        .lb-row:nth-child(2) .lb-rank { color: #f59e0b; font-size: 1.2rem; } /* Peringkat 1 Emas */
+        .lb-row:nth-child(3) .lb-rank { color: #94a3b8; font-size: 1.1rem; } /* Peringkat 2 Perak */
+        .lb-row:nth-child(4) .lb-rank { color: #b45309; font-size: 1.1rem; } /* Peringkat 3 Perunggu */
+
+        .loading-spinner { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: var(--white); animation: spin 1s ease-in-out infinite; display: none; }
+        .btn-primary.loading .loading-spinner { display: block; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- SCREEN LOADING (BARU) -->
+        <div id="screen-loading" class="screen active fade-in" style="justify-content: center; align-items: center; text-align: center;">
+            <div class="loading-spinner" style="display: block; width: 50px; height: 50px; border: 4px solid rgba(0,0,0,0.1); border-top-color: var(--primary); margin: 0 auto 20px;"></div>
+            <p style="color: var(--text-muted); font-weight: 500; font-size: 1.1rem;">Memuat Data dari Database...</p>
+        </div>
+
+        <!-- SCREEN 0: LOGIN / NAMA (dihapus class 'active' nya) -->
+        <div id="screen-login" class="screen fade-in" style="justify-content: center;">
+            <div class="slide-up">
+                <h1 class="start-header">Simulasi CPNS</h1>
+                <p class="start-desc">Silakan masukkan nama Anda untuk memulai tes dan mencatat skor di Leaderboard.</p>
+                <div class="input-group">
+                    <input type="text" id="username-input" class="input-field" placeholder="Masukkan Nama Lengkap / Username" autocomplete="off">
+                </div>
+                <button class="btn-primary" onclick="goToStart()">Lanjutkan</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 1: START INFO -->
+        <div id="screen-start" class="screen" style="justify-content: center;">
+            <div class="slide-up">
+                <h1 id="start-header" class="start-header"></h1>
+                <p id="start-desc" class="start-desc"></p>
+                <div style="background: var(--white); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-bottom: 32px; text-align: center;">
+                    <span style="display:block; font-size: 2rem; font-family: 'Playfair Display', serif; color: var(--primary);" id="total-soal-info">0</span>
+                    <span style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Total Soal</span>
+                </div>
+                <button class="btn-primary" onclick="startQuiz()">Mulai Tantangan</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: QUIZ -->
+        <div id="screen-quiz" class="screen">
+            <div class="quiz-header fade-in">
+                <span id="soal-counter" style="font-weight: 600; letter-spacing: 1px;">SOAL 1 / 5</span>
+                <div id="timer" class="timer-box"></div>
+            </div>
+
+            <div id="question-text" class="question-text slide-up">
+                <!-- Diisi JS -->
+            </div>
+
+            <div id="options-container" class="options-container slide-up" style="animation-delay: 0.1s;">
+                <!-- Diisi JS -->
+            </div>
+
+            <div class="slide-up" style="animation-delay: 0.2s; margin-top: auto;">
+                <button id="btn-submit" class="btn-primary" disabled onclick="checkAnswer()">Periksa Jawaban</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 3: EXPLANATION (PER SOAL) -->
+        <div id="screen-explanation" class="screen" style="justify-content: center;">
+            <div class="slide-up">
+                <h1 id="result-title" class="result-title">BENAR</h1>
+                <p id="result-subtitle" class="result-subtitle">Skor Anda: 0 Poin</p>
+                
+                <div id="analysis" class="analysis-box">
+                    <div class="analysis-title">Analisa Performa:</div>
+                    <div id="analysis-text"></div>
+                </div>
+
+                <button id="btn-pembahasan" class="btn-outline" style="display:none;" onclick="toggleExplanation()">Lihat Pembahasan Lengkap</button>
+                
+                <div id="explanation" class="explanation-box">
+                    <!-- Diisi JS -->
+                </div>
+
+                <button id="btn-next-soal" class="btn-primary" onclick="nextQuestion()">Soal Berikutnya</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 4: FINAL RESULT & LEADERBOARD -->
+        <div id="screen-final" class="screen" style="justify-content: center;">
+            <div class="slide-up" style="text-align: center;">
+                <p style="color: var(--text-muted); font-weight: 600; letter-spacing: 1px; margin-bottom: 10px;">TES SELESAI</p>
+                <h1 class="start-header" style="font-size: 3.5rem; margin-bottom: 5px;" id="final-score">0</h1>
+                <p style="color: var(--text-main); margin-bottom: 40px;">Total Skor Akhir</p>
+
+                <h2 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; text-align: left; margin-bottom: 16px;">Leaderboard Global</h2>
+                
+                <div class="leaderboard-container">
+                    <div class="lb-row lb-header">
+                        <div class="lb-rank">#</div>
+                        <div class="lb-name">NAMA PESERTA</div>
+                        <div class="lb-score">SKOR</div>
+                    </div>
+                    <div id="leaderboard-body">
+                        <!-- Data Loader -->
+                        <div style="padding: 30px; text-align: center; color: var(--text-muted);">
+                            Memuat data klasemen...
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-outline" onclick="location.reload()">Kerjakan Ulang Tes</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // =========================================================================
+        // PENGATURAN BACKEND
+        // =========================================================================
+        // URL Web App dari Google Apps Script (GANTI DENGAN URL ANDA!)
+        const APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwH3y2uCsgfWvbSn9qJVtVvd3fFapH-TuRi4iGFnIuqQB_YTq-0fPDMSxtTYQ4Jy6Ok/exec"; 
+        
+        // Data tidak lagi di-hardcode, disiapkan sebagai tempat kosong
+        let PENGATURAN = {
+            waktuPerSoal: 60,
+            judulAwal: "Memuat...",
+            deskripsiAwal: "Memuat...",
+            daftarSoal: []
+        };
+        // =========================================================================
+
+        // === STATE VARIABLES ===
+        let currentQuestionIndex = 0;
+        let timeLimit = 0;
+        let timerInterval;
+        let selectedAnswer = null;
+        let isTimeout = false;
+        
+        // Data Player
+        let playerName = "";
+        let totalSkorPemain = 0;
+        let totalWaktuTerpakai = 0;
+
+        // === DOM ELEMENTS ===
+        const screenLoading = document.getElementById('screen-loading');
+        const screenLogin = document.getElementById('screen-login');
+        const screenStart = document.getElementById('screen-start');
+        const screenQuiz = document.getElementById('screen-quiz');
+        const screenExplanation = document.getElementById('screen-explanation');
+        const screenFinal = document.getElementById('screen-final');
+        const timerDisplay = document.getElementById('timer');
+        const btnSubmit = document.getElementById('btn-submit');
+        const btnNextSoal = document.getElementById('btn-next-soal');
+
+        // === FUNGSI FETCH OTOMATIS SAAT WEB DIBUKA ===
+        window.onload = async function() {
+            if(APP_SCRIPT_URL === "ISI_DENGAN_URL_WEB_APP_ANDA_DISINI") {
+                alert("PERHATIAN: URL App Script belum diisi di kode HTML. Aplikasi tidak dapat menarik soal.");
+                screenLoading.innerHTML = "<p style='color:var(--text-main); font-weight:600;'>URL Backend belum diatur.<br>Silakan edit URL di dalam file HTML.</p>";
+                return;
+            }
+
+            try {
+                // Menarik data Soal dan Pengaturan dari Spreadsheet
+                const response = await fetch(APP_SCRIPT_URL);
+                const data = await response.json();
+
+                if(data.status === 'success') {
+                    // Update data lokal dengan data dari Spreadsheet
+                    PENGATURAN.waktuPerSoal = parseInt(data.pengaturan.waktuPerSoal) || 60;
+                    PENGATURAN.judulAwal = data.pengaturan.judulAwal || "TES CAT";
+                    PENGATURAN.deskripsiAwal = data.pengaturan.deskripsiAwal || "";
+                    PENGATURAN.daftarSoal = data.soal;
+
+                    if(PENGATURAN.daftarSoal.length === 0) {
+                        throw new Error("Belum ada soal di Spreadsheet!");
+                    }
+
+                    // Selesai memuat, tampilkan layar input nama
+                    screenLoading.classList.remove('active');
+                    screenLogin.classList.add('active');
+                } else {
+                    throw new Error(data.message || "Gagal mengambil data dari server");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                screenLoading.innerHTML = `<p style='color:#ef4444; padding: 20px;'><strong>Koneksi Gagal:</strong><br>${error.message}</p>`;
+            }
+        };
+
+        // === INISIALISASI ===
+        function goToStart() {
+            const inputName = document.getElementById('username-input').value.trim();
+            if (inputName === "") {
+                alert("Mohon masukkan nama Anda terlebih dahulu!");
+                return;
+            }
+            playerName = inputName;
+
+            document.getElementById('start-header').innerHTML = PENGATURAN.judulAwal;
+            document.getElementById('start-desc').innerHTML = PENGATURAN.deskripsiAwal;
+            document.getElementById('total-soal-info').textContent = PENGATURAN.daftarSoal.length;
+
+            screenLogin.classList.remove('active');
+            screenStart.classList.add('active');
+        }
+
+        function startQuiz() {
+            screenStart.classList.remove('active');
+            screenQuiz.classList.add('active');
+            renderQuestion(currentQuestionIndex);
+        }
+
+        function renderQuestion(index) {
+            const soalData = PENGATURAN.daftarSoal[index];
+            
+            document.getElementById('soal-counter').textContent = `SOAL ${index + 1} / ${PENGATURAN.daftarSoal.length}`;
+            document.getElementById('question-text').innerHTML = soalData.teksSoal;
+            
+            // Generate Pilihan
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = ''; 
+            selectedAnswer = null;
+            btnSubmit.disabled = true;
+            isTimeout = false;
+
+            soalData.pilihan.forEach(pil => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.onclick = function() { selectOption(pil.huruf, this); };
+                btn.innerHTML = `<span class="option-label">${pil.huruf}.</span> ${pil.teks}`;
+                optionsContainer.appendChild(btn);
+            });
+
+            // Reset Timer berdasarkan pengaturan Spreadsheet
+            timeLimit = PENGATURAN.waktuPerSoal;
+            timerDisplay.classList.remove('urgent');
+            updateTimerDisplay(timeLimit);
+            startTimer();
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLimit--;
+                updateTimerDisplay(timeLimit);
+
+                if (timeLimit <= 15 && timeLimit > 0) {
+                    timerDisplay.classList.add('urgent');
+                } else {
+                    timerDisplay.classList.remove('urgent');
+                }
+
+                if (timeLimit <= 0) {
+                    clearInterval(timerInterval);
+                    isTimeout = true;
+                    checkAnswer();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay(seconds) {
+            const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+            const s = (seconds % 60).toString().padStart(2, '0');
+            timerDisplay.textContent = `${m}:${s}`;
+        }
+
+        function selectOption(answer, btnElement) {
+            const allOptionBtns = document.querySelectorAll('.option-btn');
+            allOptionBtns.forEach(btn => {
+                btn.classList.remove('selected');
+                btn.style.transform = ''; 
+            });
+
+            btnElement.classList.add('selected');
+            selectedAnswer = answer;
+            btnSubmit.disabled = false;
+        }
+
+        function checkAnswer() {
+            clearInterval(timerInterval); 
+            screenQuiz.classList.remove('active');
+            screenExplanation.classList.add('active');
+
+            const soalData = PENGATURAN.daftarSoal[currentQuestionIndex];
+            const waktuTerpakai = PENGATURAN.waktuPerSoal - timeLimit;
+            const rasioWaktu = waktuTerpakai / PENGATURAN.waktuPerSoal;
+            
+            totalWaktuTerpakai += waktuTerpakai;
+
+            const resultTitle = document.getElementById('result-title');
+            const resultSubtitle = document.getElementById('result-subtitle');
+            const analysisBox = document.getElementById('analysis');
+            const analysisText = document.getElementById('analysis-text');
+            const btnPembahasan = document.getElementById('btn-pembahasan');
+            const explBox = document.getElementById('explanation');
+
+            explBox.innerHTML = soalData.pembahasanHTML;
+            explBox.classList.remove('show'); 
+            analysisBox.classList.add('show');
+
+            if (isTimeout) {
+                resultTitle.textContent = "WAKTU HABIS";
+                resultTitle.className = "result-title status-waktu";
+                resultSubtitle.innerHTML = `Anda gagal menjawab dalam waktu yang ditentukan.<br><br><span style="font-size:1.5rem">Skor didapat: <strong>0</strong></span>`;
+                analysisText.innerHTML = "Manajemen waktu kurang baik pada soal ini. Terus berlatih agar lebih cepat memproses informasi.";
+                btnPembahasan.style.display = "block"; 
+            } else if (selectedAnswer === soalData.kunciJawaban) {
+                const poinDasar = 50;
+                const rasioKecepatan = timeLimit / PENGATURAN.waktuPerSoal; 
+                const bonusKecepatan = Math.round(rasioKecepatan * 50);
+                const skorSoalIni = poinDasar + bonusKecepatan;
+                
+                totalSkorPemain += skorSoalIni;
+                
+                resultTitle.textContent = "BENAR";
+                resultTitle.className = "result-title status-benar";
+                resultSubtitle.innerHTML = `Diselesaikan dalam <strong>${waktuTerpakai} detik</strong>!<br><br>
+                    Skor Dasar: +${poinDasar}<br>
+                    Bonus Waktu: +${bonusKecepatan}<br>
+                    <span style="font-size:1.6rem; line-height:2.5;">Skor didapat: <strong>${skorSoalIni}</strong></span>`;
+                
+                if (rasioWaktu < 0.4) analysisText.innerHTML = "Sangat Cepat & Akurat! Analisa Anda tajam.";
+                else if (rasioWaktu < 0.8) analysisText.innerHTML = "Kecepatan Normal & Akurat. Cukup baik, pertahankan!";
+                else analysisText.innerHTML = "Akurat namun Terlalu Lambat. Hati-hati kehabisan waktu di tes sesungguhnya.";
+                
+                btnPembahasan.style.display = "block"; 
+            } else {
+                resultTitle.textContent = "SALAH";
+                resultTitle.className = "result-title status-salah";
+                resultSubtitle.innerHTML = `Jawaban Anda (${selectedAnswer || '-'}) keliru. Diselesaikan dalam ${waktuTerpakai} detik.<br><br><span style="font-size:1.5rem">Skor didapat: <strong>0</strong></span>`;
+                
+                if (rasioWaktu < 0.3) analysisText.innerHTML = "Terlalu Terburu-buru! Anda terkecoh oleh angka jebakan di pilihan jawaban.";
+                else analysisText.innerHTML = "Jawaban meleset! Anda mungkin terjebak pada permainan kata atau rumus. Cek pembahasan.";
+                
+                btnPembahasan.style.display = "block"; 
+            }
+
+            if (currentQuestionIndex < PENGATURAN.daftarSoal.length - 1) {
+                btnNextSoal.innerHTML = "Lanjut Soal Berikutnya";
+            } else {
+                btnNextSoal.innerHTML = `<div class="loading-spinner"></div> Lihat Hasil Akhir`;
+            }
+        }
+
+        function toggleExplanation() {
+            const explBox = document.getElementById('explanation');
+            explBox.classList.toggle('show');
+            if(explBox.classList.contains('show')){
+                setTimeout(() => { window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); }, 100);
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < PENGATURAN.daftarSoal.length - 1) {
+                currentQuestionIndex++;
+                screenExplanation.classList.remove('active');
+                screenQuiz.classList.add('active');
+                renderQuestion(currentQuestionIndex);
+            } else {
+                finishQuiz();
+            }
+        }
+
+        // === BAGIAN BACKEND INTEGRATION ===
+        async function finishQuiz() {
+            btnNextSoal.disabled = true;
+            btnNextSoal.classList.add('loading');
+            
+            // 1. Simpan Data ke Spreadsheet via Apps Script
+            const payload = {
+                username: playerName,
+                score: totalSkorPemain,
+                waktuTerpakai: totalWaktuTerpakai
+            };
+
+            try {
+                if(APP_SCRIPT_URL !== "ISI_DENGAN_URL_WEB_APP_ANDA_DISINI") {
+                    await fetch(APP_SCRIPT_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify(payload)
+                    });
+                }
+            } catch (error) {
+                console.error("Gagal menyimpan skor:", error);
+            }
+
+            // 2. Pindah ke Layar Akhir
+            screenExplanation.classList.remove('active');
+            screenFinal.classList.add('active');
+            document.getElementById('final-score').textContent = totalSkorPemain;
+
+            // 3. Tarik Leaderboard (Ditambahkan ?action=getLeaderboard)
+            loadLeaderboard();
+        }
+
+        async function loadLeaderboard() {
+            const lbBody = document.getElementById('leaderboard-body');
+            
+            try {
+                // Tarik data spesifik leaderboard
+                const response = await fetch(APP_SCRIPT_URL + "?action=getLeaderboard");
+                const data = await response.json();
+                
+                lbBody.innerHTML = ""; 
+                
+                if(!data || data.length === 0) {
+                    lbBody.innerHTML = `<div style="padding: 20px; text-align: center; color: var(--text-muted);">Belum ada data.</div>`;
+                    return;
+                }
+
+                data.forEach((row, index) => {
+                    const isCurrentPlayer = (row.username === playerName && row.score === totalSkorPemain);
+                    const bgStyle = isCurrentPlayer ? "background-color: #fef3c7;" : "";
+                    
+                    lbBody.innerHTML += `
+                        <div class="lb-row" style="${bgStyle}">
+                            <div class="lb-rank">${index + 1}</div>
+                            <div class="lb-name">${row.username} ${isCurrentPlayer ? '(Anda)' : ''}</div>
+                            <div class="lb-score">${row.score}</div>
+                        </div>
+                    `;
+                });
+
+            } catch (error) {
+                lbBody.innerHTML = `<div style="padding: 20px; text-align: center; color: red;">Gagal memuat klasemen.</div>`;
+            }
+        }
+    </script>
+</body>
