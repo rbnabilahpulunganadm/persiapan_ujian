@@ -6,7 +6,7 @@
     <title>Simulasi CPNS - Soal Tersulit</title>
     <style>
         /* === DESAIN ESTETIK MODERN === */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,600;1,400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap');
 
         :root {
             --primary: #18181b; /* Zinc 900 */
@@ -23,6 +23,11 @@
             --radius-md: 16px;
             --radius-sm: 12px;
             --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            
+            /* Leaderboard Colors */
+            --gold: #fbbf24;
+            --silver: #94a3b8;
+            --bronze: #b45309;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -45,7 +50,7 @@
         /* === LAYOUT UTAMA === */
         .container {
             width: 100%;
-            max-width: 600px;
+            max-width: 650px;
             background: var(--bg-card);
             backdrop-filter: blur(10px);
             min-height: 100vh;
@@ -76,24 +81,86 @@
             50% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); color: #dc2626; border-color: #dc2626; }
         }
         @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes fillBar { from { width: 0; } }
+
+        /* === UTILITY CLASSES === */
+        .text-center { text-align: center; }
+        .mb-2 { margin-bottom: 8px; }
+        .mb-4 { margin-bottom: 16px; }
+        .mb-6 { margin-bottom: 24px; }
+        .mb-8 { margin-bottom: 32px; }
 
         /* === SCREEN STATES === */
         .screen { display: none; padding: 48px 40px; flex-direction: column; flex-grow: 1; }
         @media (max-width: 480px) { .screen { padding: 40px 24px; } }
         .screen.active { display: flex; }
 
-        /* === INPUT NAMA & START SCREEN === */
-        .start-header { font-family: 'Playfair Display', serif; font-size: 2.5rem; line-height: 1.15; margin-bottom: 24px; text-align: center; color: var(--primary); }
-        .start-desc { text-align: center; color: var(--text-muted); margin-bottom: 32px; font-size: 1.05rem; line-height: 1.7; }
+        /* === INPUT FORMS === */
+        .start-header { font-family: 'Playfair Display', serif; font-size: 2.5rem; line-height: 1.15; text-align: center; color: var(--primary); }
+        .start-desc { text-align: center; color: var(--text-muted); font-size: 1.05rem; line-height: 1.7; }
         
-        .input-group { margin-bottom: 32px; width: 100%; }
+        .input-group { margin-bottom: 32px; width: 100%; display: flex; flex-direction: column; gap: 16px; }
         .input-field {
             width: 100%; padding: 18px 24px; border-radius: var(--radius-md);
             border: 1px solid var(--border-color); font-size: 1.1rem;
             font-family: inherit; transition: var(--transition);
-            text-align: center; background: var(--white);
+            background: var(--white);
         }
         .input-field:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(24, 24, 27, 0.1); }
+        
+        .select-field {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2371717a%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1.5rem top 50%;
+            background-size: 0.8rem auto;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Error text untuk validasi kode */
+        .error-text { color: #ef4444; font-size: 0.9rem; text-align: center; margin-top: -8px; display: none; font-weight: 500;}
+
+        /* === BADGE & ALUR PEMESANAN === */
+        .success-badge { display: inline-block; background: #ecfdf5; color: #059669; padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-bottom: 16px; border: 1px solid #a7f3d0; }
+
+        .step-flow { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; padding: 16px; background: rgba(255, 255, 255, 0.6); border-radius: var(--radius-sm); border: 1px dashed var(--border-color); }
+        .step-item { display: flex; align-items: center; gap: 12px; }
+        .step-num { width: 24px; height: 24px; background: var(--primary); color: var(--white); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 0.85rem; font-weight: 700; flex-shrink: 0; }
+        .step-text { font-size: 0.9rem; color: var(--text-main); line-height: 1.4; }
+        .step-text strong { color: var(--primary); }
+
+        /* === PREMIUM INFO BOX === */
+        .premium-box {
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            border: 1px solid var(--border-color); 
+            border-radius: var(--radius-lg); 
+            padding: 32px 24px; 
+            margin-top: 40px; 
+            text-align: left; 
+            animation: fadeIn 1s ease 0.3s both;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+        }
+        .premium-box h3 { font-size: 1.3rem; color: var(--primary); margin-bottom: 12px; font-family: 'Playfair Display', serif; display: flex; align-items: center; gap: 10px;}
+        .premium-box p { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; }
+        
+        .pay-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 24px; }
+        .pay-item { background: var(--bg-body); border: 1px solid transparent; padding: 16px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: var(--transition); }
+        .pay-item:hover { background: var(--white); border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+        .pay-item:active { transform: translateY(0); }
+        .pay-item-left { display: flex; align-items: center; gap: 16px; }
+        .pay-icon { width: 36px; height: auto; max-height: 24px; object-fit: contain; }
+        .pay-text { font-weight: 600; font-size: 1rem; color: var(--primary); }
+        .pay-sub { font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 2px;}
+        .copy-badge { font-size: 0.75rem; background: #e2e8f0; color: #475569; padding: 6px 12px; border-radius: 20px; font-weight: 600; display: flex; align-items: center; gap: 4px;}
+        
+        .btn-wa { background: #25D366; color: white; border: none; padding: 16px 24px; border-radius: var(--radius-md); font-size: 1.05rem; font-weight: 600; cursor: pointer; transition: var(--transition); display: flex; justify-content: center; align-items: center; gap: 10px; text-decoration: none; width: 100%; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2); }
+        .btn-wa:hover { background: #1ebc5a; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3); }
+
+        /* === TOAST NOTIFICATION === */
+        #toast { visibility: hidden; min-width: 250px; background-color: var(--primary); color: #fff; text-align: center; border-radius: 30px; padding: 14px 24px; position: fixed; z-index: 1000; left: 50%; bottom: 30px; font-size: 0.95rem; font-weight: 500; transform: translateX(-50%) translateY(20px); opacity: 0; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        #toast.show { visibility: visible; opacity: 1; transform: translateX(-50%) translateY(0); }
 
         /* === QUIZ SCREEN === */
         .quiz-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 24px; margin-bottom: 32px; position: relative; }
@@ -137,17 +204,42 @@
         .step:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
         .step strong { display: block; margin-bottom: 8px; font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--primary); }
 
-        /* === LEADERBOARD SCREEN === */
-        .leaderboard-container { background: var(--white); border-radius: var(--radius-md); border: 1px solid var(--border-color); overflow: hidden; margin-bottom: 32px; }
-        .lb-row { display: flex; padding: 16px 20px; border-bottom: 1px solid var(--border-color); align-items: center; }
-        .lb-row:last-child { border-bottom: none; }
-        .lb-header { background: var(--bg-body); font-weight: 600; font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-        .lb-rank { width: 40px; font-weight: 600; }
-        .lb-name { flex: 1; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 10px; }
-        .lb-score { width: 80px; text-align: right; font-weight: 600; color: var(--primary); }
-        .lb-row:nth-child(2) .lb-rank { color: #f59e0b; font-size: 1.2rem; } /* Peringkat 1 Emas */
-        .lb-row:nth-child(3) .lb-rank { color: #94a3b8; font-size: 1.1rem; } /* Peringkat 2 Perak */
-        .lb-row:nth-child(4) .lb-rank { color: #b45309; font-size: 1.1rem; } /* Peringkat 3 Perunggu */
+        /* === LEADERBOARD UI === */
+        .stats-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 16px; border-bottom: 2px solid var(--border-color); padding-bottom: 12px; }
+        .stats-header h2 { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--primary); margin:0;}
+        .total-peserta-badge { background: var(--primary); color: var(--white); padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
+        
+        .leaderboard-container { background: transparent; display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+        .lb-card { background: var(--white); border-radius: var(--radius-md); border: 1px solid var(--border-color); padding: 16px; display: flex; align-items: center; transition: var(--transition); box-shadow: 0 2px 10px rgba(0,0,0,0.02); position: relative; overflow: hidden; }
+        .lb-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); border-color: #d4d4d8;}
+        
+        .lb-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: transparent; }
+        .lb-card.rank-1::before { background: var(--gold); }
+        .lb-card.rank-2::before { background: var(--silver); }
+        .lb-card.rank-3::before { background: var(--bronze); }
+        .lb-card.is-me { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+
+        .lb-rank-badge { width: 36px; height: 36px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 700; font-size: 1rem; color: var(--text-muted); background: var(--bg-body); margin-right: 16px; flex-shrink: 0; }
+        .rank-1 .lb-rank-badge { background: #fef3c7; color: var(--gold); font-size: 1.2rem; box-shadow: 0 0 15px rgba(251, 191, 36, 0.4); }
+        .rank-2 .lb-rank-badge { background: #f1f5f9; color: var(--silver); }
+        .rank-3 .lb-rank-badge { background: #ffedd5; color: var(--bronze); }
+
+        .lb-avatar { width: 42px; height: 42px; border-radius: 50%; background: var(--primary); color: white; display: flex; justify-content: center; align-items: center; font-weight: 600; font-size: 1.1rem; margin-right: 16px; flex-shrink: 0; text-transform: uppercase; }
+
+        .lb-info { flex: 1; min-width: 0; }
+        .lb-name { font-weight: 600; font-size: 1.05rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--primary); display: flex; align-items: center; gap: 8px;}
+        .me-badge { font-size: 0.7rem; background: var(--primary); color: var(--white); padding: 2px 6px; border-radius: 10px; letter-spacing: 0.5px; }
+        
+        .lb-stats-row { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+        
+        .lb-progress-bg { flex: 1; height: 6px; background: var(--bg-body); border-radius: 10px; margin-right: 15px; overflow: hidden; }
+        .lb-progress-fill { height: 100%; border-radius: 10px; background: var(--primary); width: 0%; animation: fillBar 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: 0.3s;}
+        .rank-1 .lb-progress-fill { background: var(--gold); }
+        .rank-2 .lb-progress-fill { background: var(--silver); }
+        .rank-3 .lb-progress-fill { background: var(--bronze); }
+
+        .lb-score-text { font-weight: 700; font-size: 1.1rem; color: var(--primary); }
+        .lb-time-text { font-size: 0.8rem; color: var(--text-muted); text-align: right; margin-top: 2px;}
 
         .loading-spinner { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: var(--white); animation: spin 1s ease-in-out infinite; display: none; }
         .btn-primary.loading .loading-spinner { display: block; }
@@ -157,34 +249,116 @@
 
     <div class="container">
         
-        <!-- SCREEN LOADING (BARU) -->
+        <!-- SCREEN LOADING -->
         <div id="screen-loading" class="screen active fade-in" style="justify-content: center; align-items: center; text-align: center;">
             <div class="loading-spinner" style="display: block; width: 50px; height: 50px; border: 4px solid rgba(0,0,0,0.1); border-top-color: var(--primary); margin: 0 auto 20px;"></div>
-            <p style="color: var(--text-muted); font-weight: 500; font-size: 1.1rem;">Memuat Data dari Database...</p>
+            <p style="color: var(--text-muted); font-weight: 500; font-size: 1.1rem;">Memuat Sistem & Soal...</p>
         </div>
 
-        <!-- SCREEN 0: LOGIN / NAMA (dihapus class 'active' nya) -->
+        <!-- SCREEN 0: KODE AKSES SAJA -->
         <div id="screen-login" class="screen fade-in" style="justify-content: center;">
             <div class="slide-up">
-                <h1 class="start-header">Simulasi CPNS</h1>
-                <p class="start-desc">Silakan masukkan nama Anda untuk memulai tes dan mencatat skor di Leaderboard.</p>
-                <div class="input-group">
-                    <input type="text" id="username-input" class="input-field" placeholder="Masukkan Nama Lengkap / Username" autocomplete="off">
+                <div class="text-center mb-8">
+                    <div style="font-size: 3.5rem; margin-bottom: 12px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));">🎓</div>
+                    <h1 class="start-header" style="margin-bottom: 12px; margin-top: 0;">Simulasi CPNS</h1>
+                    <p class="start-desc" style="margin-bottom: 0;">Masukkan kode akses VIP Anda untuk memulai.</p>
                 </div>
-                <button class="btn-primary" onclick="goToStart()">Lanjutkan</button>
+                
+                <div class="input-group">
+                    <input type="text" id="kode-input" class="input-field" placeholder="Ketik Kode Akses Di Sini" autocomplete="off" style="text-transform: uppercase; font-weight: 600; letter-spacing: 2px; text-align: center;">
+                    <p id="error-msg" class="error-text">Kode akses tidak valid atau tidak ditemukan!</p>
+                </div>
+                
+                <button class="btn-primary" onclick="verifyCode()">Verifikasi Kode Akses</button>
+
+                <!-- KOTAK PREMIUM PANDUAN -->
+                <div class="premium-box">
+                    <h3>👑 Belum Punya Kode Akses?</h3>
+                    
+                    <!-- INFO ALUR PEMESANAN -->
+                    <div class="step-flow">
+                        <div class="step-item">
+                            <div class="step-num">1</div>
+                            <div class="step-text">Transfer <strong>Rp 5.000</strong> ke salah satu opsi di bawah.</div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-num">2</div>
+                            <div class="step-text">Klik tombol WhatsApp untuk mengirim bukti transfer.</div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-num">3</div>
+                            <div class="step-text">Admin akan langsung membalas dengan <strong>Kode Akses VIP</strong>.</div>
+                        </div>
+                    </div>
+
+                    <p style="margin-bottom: 12px; font-weight: 600; font-size: 0.95rem; color: var(--primary);">Pilih Metode Pembayaran:</p>
+
+                    <div class="pay-grid">
+                        <!-- Item DANA -->
+                        <div class="pay-item" onclick="copyText('082273902728', 'DANA')">
+                            <div class="pay-item-left">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/7/72/Logo_dana_blue.svg" alt="DANA" class="pay-icon">
+                                <div>
+                                    <span class="pay-text">0822 7390 2728</span>
+                                    <span class="pay-sub">a.n. Ahmad Ropat Tanjung</span>
+                                </div>
+                            </div>
+                            <div class="copy-badge">📋 Salin</div>
+                        </div>
+
+                        <!-- Item ShopeePay -->
+                        <div class="pay-item" onclick="copyText('082273902728', 'ShopeePay')">
+                            <div class="pay-item-left">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Shopee.svg" alt="ShopeePay" class="pay-icon" style="filter: hue-rotate(340deg) saturate(3);">
+                                <div>
+                                    <span class="pay-text">0822 7390 2728</span>
+                                    <span class="pay-sub">a.n. Ahmad Ropat Tanjung</span>
+                                </div>
+                            </div>
+                            <div class="copy-badge">📋 Salin</div>
+                        </div>
+
+                        <!-- Item BSI -->
+                        <div class="pay-item" onclick="copyText('7207203418', 'BSI')">
+                            <div class="pay-item-left">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a0/Bank_Syariah_Indonesia.svg" alt="BSI" class="pay-icon">
+                                <div>
+                                    <span class="pay-text">7207203418</span>
+                                    <span class="pay-sub">a.n. Ahmad Ropat Tanjung</span>
+                                </div>
+                            </div>
+                            <div class="copy-badge">📋 Salin</div>
+                        </div>
+                    </div>
+
+                    <a href="https://wa.me/6282273902728?text=Halo%20Admin,%20saya%20ingin%20konfirmasi%20pembayaran%20Rp5.000%20untuk%20pembelian%20Kode%20Akses%20Simulasi%20CPNS.%20Tolong%20dicek%20ya." target="_blank" class="btn-wa">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21"/><path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1"/></svg>
+                        Konfirmasi via WhatsApp
+                    </a>
+                </div>
             </div>
         </div>
 
-        <!-- SCREEN 1: START INFO -->
+        <!-- SCREEN 1: START INFO, KATEGORI & NAMA -->
         <div id="screen-start" class="screen" style="justify-content: center;">
-            <div class="slide-up">
-                <h1 id="start-header" class="start-header"></h1>
+            <div class="slide-up text-center">
+                <div class="success-badge">✅ Kode Akses Diterima</div>
+                <h1 id="start-header" class="start-header" style="margin-bottom: 16px;"></h1>
                 <p id="start-desc" class="start-desc"></p>
-                <div style="background: var(--white); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-bottom: 32px; text-align: center;">
-                    <span style="display:block; font-size: 2rem; font-family: 'Playfair Display', serif; color: var(--primary);" id="total-soal-info">0</span>
-                    <span style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Total Soal</span>
+                
+                <div style="background: var(--bg-body); padding: 24px; border-radius: var(--radius-md); margin-bottom: 32px; display: inline-block; min-width: 200px;">
+                    <span style="display:block; font-size: 2.5rem; font-weight: 700; color: var(--primary); line-height: 1;" id="total-soal-info">-</span>
+                    <span style="color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 500; margin-top: 8px; display: block;">Total Soal</span>
                 </div>
-                <button class="btn-primary" onclick="startQuiz()">Mulai Tantangan</button>
+
+                <div class="input-group">
+                    <select id="kategori-input" class="input-field select-field">
+                        <option value="" disabled selected>-- Pilih Kategori Soal --</option>
+                    </select>
+                    <input type="text" id="username-input" class="input-field" placeholder="Masukkan Nama Lengkap Anda" autocomplete="off" style="text-align: center; border-color: var(--border-color); font-weight: 500;">
+                </div>
+
+                <button class="btn-primary" onclick="startTantangan()">Mulai Tantangan Sekarang</button>
             </div>
         </div>
 
@@ -208,7 +382,7 @@
             </div>
         </div>
 
-        <!-- SCREEN 3: EXPLANATION (PER SOAL) -->
+        <!-- SCREEN 3: EXPLANATION -->
         <div id="screen-explanation" class="screen" style="justify-content: center;">
             <div class="slide-up">
                 <h1 id="result-title" class="result-title">BENAR</h1>
@@ -230,47 +404,50 @@
         </div>
 
         <!-- SCREEN 4: FINAL RESULT & LEADERBOARD -->
-        <div id="screen-final" class="screen" style="justify-content: center;">
-            <div class="slide-up" style="text-align: center;">
-                <p style="color: var(--text-muted); font-weight: 600; letter-spacing: 1px; margin-bottom: 10px;">TES SELESAI</p>
-                <h1 class="start-header" style="font-size: 3.5rem; margin-bottom: 5px;" id="final-score">0</h1>
-                <p style="color: var(--text-main); margin-bottom: 40px;">Total Skor Akhir</p>
+        <div id="screen-final" class="screen" style="justify-content: center; padding-top:60px; padding-bottom:60px;">
+            <div class="slide-up">
+                <div style="text-align: center;">
+                    <p style="color: var(--text-muted); font-weight: 600; letter-spacing: 1px; margin-bottom: 10px;">TES SELESAI</p>
+                    <h1 class="start-header" style="font-size: 3.5rem; margin-bottom: 5px;" id="final-score">0</h1>
+                    <p style="color: var(--text-main); margin-bottom: 40px;">Total Skor Akhir</p>
+                </div>
 
-                <h2 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; text-align: left; margin-bottom: 16px;">Leaderboard Global</h2>
-                
-                <div class="leaderboard-container">
-                    <div class="lb-row lb-header">
-                        <div class="lb-rank">#</div>
-                        <div class="lb-name">NAMA PESERTA</div>
-                        <div class="lb-score">SKOR</div>
+                <div class="stats-header">
+                    <h2>Klasemen Global</h2>
+                    <div class="total-peserta-badge">
+                        <span id="lb-total-peserta">0</span> Peserta
                     </div>
-                    <div id="leaderboard-body">
-                        <!-- Data Loader -->
-                        <div style="padding: 30px; text-align: center; color: var(--text-muted);">
-                            Memuat data klasemen...
-                        </div>
+                </div>
+                
+                <div class="leaderboard-container" id="leaderboard-body">
+                    <div style="padding: 30px; text-align: center; color: var(--text-muted); background: var(--white); border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                        <div class="loading-spinner" style="display: inline-block; border-top-color: var(--primary); margin-bottom: 10px;"></div><br>
+                        Menganalisa & memuat klasemen...
                     </div>
                 </div>
 
-                <button class="btn-outline" onclick="location.reload()">Kerjakan Ulang Tes</button>
+                <button class="btn-outline" onclick="location.reload()">Selesai & Keluar</button>
             </div>
         </div>
 
     </div>
 
+    <!-- TOAST ELEMENT UTK NOTIFIKASI COPY -->
+    <div id="toast">Berhasil disalin!</div>
+
     <script>
         // =========================================================================
         // PENGATURAN BACKEND
         // =========================================================================
-        // URL Web App dari Google Apps Script (GANTI DENGAN URL ANDA!)
+        // GANTI DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA!
         const APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwH3y2uCsgfWvbSn9qJVtVvd3fFapH-TuRi4iGFnIuqQB_YTq-0fPDMSxtTYQ4Jy6Ok/exec"; 
         
-        // Data tidak lagi di-hardcode, disiapkan sebagai tempat kosong
         let PENGATURAN = {
             waktuPerSoal: 60,
             judulAwal: "Memuat...",
             deskripsiAwal: "Memuat...",
-            daftarSoal: []
+            daftarSoal: [],
+            daftarKodeAkses: [] 
         };
         // =========================================================================
 
@@ -281,10 +458,13 @@
         let selectedAnswer = null;
         let isTimeout = false;
         
-        // Data Player
         let playerName = "";
         let totalSkorPemain = 0;
         let totalWaktuTerpakai = 0;
+
+        let uniqueCategories = [];
+        let filteredSoal = [];
+        let selectedCategory = "";
 
         // === DOM ELEMENTS ===
         const screenLoading = document.getElementById('screen-loading');
@@ -296,73 +476,140 @@
         const timerDisplay = document.getElementById('timer');
         const btnSubmit = document.getElementById('btn-submit');
         const btnNextSoal = document.getElementById('btn-next-soal');
+        const errorMsg = document.getElementById('error-msg');
 
-        // === FUNGSI FETCH OTOMATIS SAAT WEB DIBUKA ===
+        // === FUNGSI FETCH OTOMATIS ===
         window.onload = async function() {
             if(APP_SCRIPT_URL === "ISI_DENGAN_URL_WEB_APP_ANDA_DISINI") {
-                alert("PERHATIAN: URL App Script belum diisi di kode HTML. Aplikasi tidak dapat menarik soal.");
-                screenLoading.innerHTML = "<p style='color:var(--text-main); font-weight:600;'>URL Backend belum diatur.<br>Silakan edit URL di dalam file HTML.</p>";
+                alert("PERHATIAN: URL App Script belum diisi di kode HTML.");
+                screenLoading.innerHTML = "<p style='color:var(--text-main); font-weight:600;'>URL Backend belum diatur.</p>";
                 return;
             }
 
             try {
-                // Menarik data Soal dan Pengaturan dari Spreadsheet
                 const response = await fetch(APP_SCRIPT_URL);
                 const data = await response.json();
 
                 if(data.status === 'success') {
-                    // Update data lokal dengan data dari Spreadsheet
                     PENGATURAN.waktuPerSoal = parseInt(data.pengaturan.waktuPerSoal) || 60;
                     PENGATURAN.judulAwal = data.pengaturan.judulAwal || "TES CAT";
                     PENGATURAN.deskripsiAwal = data.pengaturan.deskripsiAwal || "";
                     PENGATURAN.daftarSoal = data.soal;
+                    PENGATURAN.daftarKodeAkses = data.kodeAkses || [];
 
                     if(PENGATURAN.daftarSoal.length === 0) {
                         throw new Error("Belum ada soal di Spreadsheet!");
                     }
 
-                    // Selesai memuat, tampilkan layar input nama
+                    // Ekstrak daftar Kategori yang unik dari data soal
+                    const categoriesSet = new Set();
+                    PENGATURAN.daftarSoal.forEach(soal => categoriesSet.add(soal.kategori || 'Umum'));
+                    uniqueCategories = Array.from(categoriesSet);
+
                     screenLoading.classList.remove('active');
                     screenLogin.classList.add('active');
                 } else {
                     throw new Error(data.message || "Gagal mengambil data dari server");
                 }
             } catch (error) {
-                console.error("Error:", error);
                 screenLoading.innerHTML = `<p style='color:#ef4444; padding: 20px;'><strong>Koneksi Gagal:</strong><br>${error.message}</p>`;
             }
         };
 
-        // === INISIALISASI ===
-        function goToStart() {
-            const inputName = document.getElementById('username-input').value.trim();
-            if (inputName === "") {
-                alert("Mohon masukkan nama Anda terlebih dahulu!");
+        // === INISIALISASI & VALIDASI KODE ===
+        function verifyCode() {
+            const inputKode = document.getElementById('kode-input').value.trim().toUpperCase();
+            
+            errorMsg.style.display = 'none';
+            document.getElementById('kode-input').style.borderColor = 'var(--border-color)';
+
+            if (inputKode === "") {
+                errorMsg.textContent = "Kode akses wajib diisi!";
+                errorMsg.style.display = 'block';
+                document.getElementById('kode-input').style.borderColor = '#ef4444';
                 return;
             }
-            playerName = inputName;
 
+            // Validasi Kode Unik dari data Spreadsheet
+            if (!PENGATURAN.daftarKodeAkses.includes(inputKode)) {
+                errorMsg.textContent = "Kode akses tidak valid atau belum terdaftar!";
+                errorMsg.style.display = 'block';
+                document.getElementById('kode-input').style.borderColor = '#ef4444';
+                return;
+            }
+
+            // Jika kode benar, tampilkan info soal & pindah layar
             document.getElementById('start-header').innerHTML = PENGATURAN.judulAwal;
             document.getElementById('start-desc').innerHTML = PENGATURAN.deskripsiAwal;
-            document.getElementById('total-soal-info').textContent = PENGATURAN.daftarSoal.length;
+            document.getElementById('total-soal-info').textContent = "-";
+
+            // Isi Dropdown Kategori
+            const katSelect = document.getElementById('kategori-input');
+            katSelect.innerHTML = '<option value="" disabled selected>-- Pilih Kategori Soal --</option>';
+            uniqueCategories.forEach(kat => {
+                katSelect.innerHTML += `<option value="${kat}">${kat}</option>`;
+            });
+
+            // Event listener untuk update total soal sesuai kategori yang dipilih
+            katSelect.addEventListener('change', function() {
+                const selected = this.value;
+                const total = PENGATURAN.daftarSoal.filter(s => (s.kategori || 'Umum') === selected).length;
+                document.getElementById('total-soal-info').textContent = total;
+            });
 
             screenLogin.classList.remove('active');
             screenStart.classList.add('active');
         }
 
-        function startQuiz() {
+        // === FUNGSI BANTUAN ANIMASI ERROR ===
+        function shakeElement(el) {
+            el.style.transform = 'translateX(-8px)';
+            setTimeout(() => el.style.transform = 'translateX(8px)', 80);
+            setTimeout(() => el.style.transform = 'translateX(-4px)', 160);
+            setTimeout(() => el.style.transform = 'translateX(0)', 240);
+        }
+
+        // === MULAI QUIZ SETELAH PILIH KATEGORI & INPUT NAMA ===
+        function startTantangan() {
+            const inputName = document.getElementById('username-input').value.trim();
+            const usernameInputEl = document.getElementById('username-input');
+            const katInput = document.getElementById('kategori-input').value;
+            const katSelectEl = document.getElementById('kategori-input');
+
+            // Reset efek error
+            usernameInputEl.style.borderColor = 'var(--border-color)';
+            katSelectEl.style.borderColor = 'var(--border-color)';
+
+            if (!katInput) {
+                katSelectEl.style.borderColor = '#ef4444';
+                shakeElement(katSelectEl);
+                return;
+            }
+
+            if (inputName === "") {
+                usernameInputEl.style.borderColor = '#ef4444';
+                shakeElement(usernameInputEl);
+                usernameInputEl.placeholder = "Mohon isi nama Anda dulu!";
+                return;
+            }
+
+            playerName = inputName;
+            selectedCategory = katInput;
+            
+            // Saring soal berdasarkan kategori yang dipilih
+            filteredSoal = PENGATURAN.daftarSoal.filter(s => (s.kategori || 'Umum') === selectedCategory);
+            
             screenStart.classList.remove('active');
             screenQuiz.classList.add('active');
             renderQuestion(currentQuestionIndex);
         }
 
         function renderQuestion(index) {
-            const soalData = PENGATURAN.daftarSoal[index];
+            const soalData = filteredSoal[index];
             
-            document.getElementById('soal-counter').textContent = `SOAL ${index + 1} / ${PENGATURAN.daftarSoal.length}`;
+            document.getElementById('soal-counter').textContent = `SOAL ${index + 1} / ${filteredSoal.length}`;
             document.getElementById('question-text').innerHTML = soalData.teksSoal;
             
-            // Generate Pilihan
             const optionsContainer = document.getElementById('options-container');
             optionsContainer.innerHTML = ''; 
             selectedAnswer = null;
@@ -377,7 +624,6 @@
                 optionsContainer.appendChild(btn);
             });
 
-            // Reset Timer berdasarkan pengaturan Spreadsheet
             timeLimit = PENGATURAN.waktuPerSoal;
             timerDisplay.classList.remove('urgent');
             updateTimerDisplay(timeLimit);
@@ -427,7 +673,7 @@
             screenQuiz.classList.remove('active');
             screenExplanation.classList.add('active');
 
-            const soalData = PENGATURAN.daftarSoal[currentQuestionIndex];
+            const soalData = filteredSoal[currentQuestionIndex];
             const waktuTerpakai = PENGATURAN.waktuPerSoal - timeLimit;
             const rasioWaktu = waktuTerpakai / PENGATURAN.waktuPerSoal;
             
@@ -481,10 +727,10 @@
                 btnPembahasan.style.display = "block"; 
             }
 
-            if (currentQuestionIndex < PENGATURAN.daftarSoal.length - 1) {
+            if (currentQuestionIndex < filteredSoal.length - 1) {
                 btnNextSoal.innerHTML = "Lanjut Soal Berikutnya";
             } else {
-                btnNextSoal.innerHTML = `<div class="loading-spinner"></div> Lihat Hasil Akhir`;
+                btnNextSoal.innerHTML = `<div class="loading-spinner"></div> Lihat Statistik Leaderboard`;
             }
         }
 
@@ -497,7 +743,7 @@
         }
 
         function nextQuestion() {
-            if (currentQuestionIndex < PENGATURAN.daftarSoal.length - 1) {
+            if (currentQuestionIndex < filteredSoal.length - 1) {
                 currentQuestionIndex++;
                 screenExplanation.classList.remove('active');
                 screenQuiz.classList.add('active');
@@ -507,16 +753,27 @@
             }
         }
 
-        // === BAGIAN BACKEND INTEGRATION ===
+        // === FUNGSI MENGAMBIL INISIAL NAMA UNTUK AVATAR ===
+        function getInitials(name) {
+            let parts = name.trim().split(' ');
+            if (parts.length >= 2) {
+                return (parts[0][0] + parts[1][0]).toUpperCase();
+            } else if (parts.length === 1 && parts[0].length >= 2) {
+                return (parts[0][0] + parts[0][1]).toUpperCase();
+            }
+            return name.charAt(0).toUpperCase() || '?';
+        }
+
+        // === BACKEND INTEGRATION & LEADERBOARD UI ===
         async function finishQuiz() {
             btnNextSoal.disabled = true;
             btnNextSoal.classList.add('loading');
             
-            // 1. Simpan Data ke Spreadsheet via Apps Script
             const payload = {
                 username: playerName,
                 score: totalSkorPemain,
-                waktuTerpakai: totalWaktuTerpakai
+                waktuTerpakai: totalWaktuTerpakai,
+                kategori: selectedCategory // Kirim Kategori ke Backend
             };
 
             try {
@@ -531,46 +788,100 @@
                 console.error("Gagal menyimpan skor:", error);
             }
 
-            // 2. Pindah ke Layar Akhir
             screenExplanation.classList.remove('active');
             screenFinal.classList.add('active');
             document.getElementById('final-score').textContent = totalSkorPemain;
 
-            // 3. Tarik Leaderboard (Ditambahkan ?action=getLeaderboard)
             loadLeaderboard();
         }
 
         async function loadLeaderboard() {
             const lbBody = document.getElementById('leaderboard-body');
+            const totalPesertaEl = document.getElementById('lb-total-peserta');
             
             try {
-                // Tarik data spesifik leaderboard
                 const response = await fetch(APP_SCRIPT_URL + "?action=getLeaderboard");
-                const data = await response.json();
+                const responseData = await response.json();
+                
+                const data = responseData.peserta;
+                const totalPeserta = responseData.totalPeserta;
                 
                 lbBody.innerHTML = ""; 
+                totalPesertaEl.textContent = totalPeserta;
                 
                 if(!data || data.length === 0) {
-                    lbBody.innerHTML = `<div style="padding: 20px; text-align: center; color: var(--text-muted);">Belum ada data.</div>`;
+                    lbBody.innerHTML = `<div style="padding: 30px; text-align: center; color: var(--text-muted); background: var(--white); border-radius: var(--radius-md); border: 1px solid var(--border-color);">Belum ada data klasemen.</div>`;
                     return;
                 }
 
+                // Cari skor tertinggi untuk menghitung persentase width progress bar
+                const highestScore = Math.max(...data.map(d => d.score), 1); 
+
                 data.forEach((row, index) => {
                     const isCurrentPlayer = (row.username === playerName && row.score === totalSkorPemain);
-                    const bgStyle = isCurrentPlayer ? "background-color: #fef3c7;" : "";
                     
+                    // Logic styling CSS berdasarkan rank
+                    let rankClass = "";
+                    if (index === 0) rankClass = "rank-1";
+                    else if (index === 1) rankClass = "rank-2";
+                    else if (index === 2) rankClass = "rank-3";
+                    
+                    const myBadge = isCurrentPlayer ? `<span class="me-badge">ANDA</span>` : '';
+                    const catBadge = `<span style="font-size: 0.7rem; background: var(--bg-body); color: var(--text-muted); padding: 2px 8px; border-radius: 12px; margin-left: 6px; border: 1px solid var(--border-color); font-weight: 500;">${row.kategori}</span>`;
+                    const meClass = isCurrentPlayer ? 'is-me' : '';
+                    const inisial = getInitials(row.username);
+                    
+                    // Hitung lebar bar
+                    let barWidth = Math.max((row.score / highestScore) * 100, 5);
+
                     lbBody.innerHTML += `
-                        <div class="lb-row" style="${bgStyle}">
-                            <div class="lb-rank">${index + 1}</div>
-                            <div class="lb-name">${row.username} ${isCurrentPlayer ? '(Anda)' : ''}</div>
-                            <div class="lb-score">${row.score}</div>
+                        <div class="lb-card ${rankClass} ${meClass}">
+                            <div class="lb-rank-badge">${index + 1}</div>
+                            <div class="lb-avatar">${inisial}</div>
+                            
+                            <div class="lb-info">
+                                <div class="lb-name">${row.username} ${myBadge} ${catBadge}</div>
+                                <div class="lb-stats-row">
+                                    <div class="lb-progress-bg">
+                                        <div class="lb-progress-fill" style="width: ${barWidth}%;"></div>
+                                    </div>
+                                    <div class="lb-score-text">${row.score} <span style="font-size:0.7rem; font-weight:500; color:var(--text-muted);">pts</span></div>
+                                </div>
+                                <div class="lb-time-text">⏱️ ${row.waktu} dtk</div>
+                            </div>
                         </div>
                     `;
                 });
 
             } catch (error) {
-                lbBody.innerHTML = `<div style="padding: 20px; text-align: center; color: red;">Gagal memuat klasemen.</div>`;
+                lbBody.innerHTML = `<div style="padding: 20px; text-align: center; color: red;">Gagal memuat klasemen. Silakan muat ulang halaman.</div>`;
             }
         }
+
+        // === FUNGSI COPY TO CLIPBOARD DAN TOAST ===
+        function copyText(text, method) {
+            const tempInput = document.createElement("input");
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            tempInput.setSelectionRange(0, 99999); // Untuk mobile
+            
+            try {
+                document.execCommand("copy");
+                showToast("✅ Nomor " + method + " berhasil disalin!");
+            } catch (err) {
+                showToast("Gagal menyalin. Silakan salin manual.");
+            }
+            document.body.removeChild(tempInput);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            toast.textContent = message;
+            toast.className = "show";
+            setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
+        }
+
     </script>
 </body>
+</html>
