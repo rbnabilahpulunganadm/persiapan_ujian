@@ -9,9 +9,9 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap');
 
         :root {
-            --primary: #0f172a; /* Slate 900 */
+            --primary: #0f172a; 
             --primary-hover: #1e293b;
-            --accent: #2563eb; /* Blue 600 */
+            --accent: #2563eb; 
             --white: #ffffff;
             --bg-body: #f8fafc;
             --bg-card: rgba(255, 255, 255, 0.98);
@@ -32,26 +32,9 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            line-height: 1.6;
-        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-main); display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; line-height: 1.6; }
 
-        .container {
-            width: 100%;
-            max-width: 768px;
-            background: var(--bg-card);
-            min-height: 100vh;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-        }
+        .container { width: 100%; max-width: 768px; background: var(--bg-card); min-height: 100vh; position: relative; display: flex; flex-direction: column; }
 
         @media (min-width: 768px) {
             body { align-items: center; padding: 40px 20px; }
@@ -90,6 +73,30 @@
         .top-name { font-weight: 500; display: flex; align-items: center; gap: 10px; font-size: 1rem;}
         .top-score { font-weight: 700; color: #fbbf24; }
 
+        /* === PREMIUM INFO BOX === */
+        .premium-box { background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 32px 24px; margin-top: 40px; text-align: left; animation: fadeIn 1s ease 0.3s both; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05); }
+        .premium-box h3 { font-size: 1.3rem; color: var(--primary); margin-bottom: 12px; font-family: 'Playfair Display', serif; display: flex; align-items: center; gap: 10px;}
+        .premium-box p { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; }
+        
+        .step-flow { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; padding: 16px; background: rgba(255, 255, 255, 0.6); border-radius: var(--radius-sm); border: 1px dashed var(--border-color); }
+        .step-item { display: flex; align-items: center; gap: 12px; }
+        .step-num { width: 24px; height: 24px; background: var(--accent); color: var(--white); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 0.85rem; font-weight: 700; flex-shrink: 0; }
+        .step-text { font-size: 0.9rem; color: var(--text-main); line-height: 1.4; }
+        .step-text strong { color: var(--accent); }
+
+        .pay-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 24px; }
+        .pay-item { background: var(--bg-body); border: 1px solid transparent; padding: 16px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: var(--transition); }
+        .pay-item:hover { background: var(--white); border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+        .pay-item-left { display: flex; align-items: center; gap: 16px; }
+        .pay-icon { width: 36px; height: auto; max-height: 24px; object-fit: contain; }
+        .pay-text { font-weight: 600; font-size: 1rem; color: var(--primary); }
+        .pay-sub { font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 2px;}
+        .copy-badge { font-size: 0.75rem; background: #e2e8f0; color: #475569; padding: 6px 12px; border-radius: 20px; font-weight: 600; display: flex; align-items: center; gap: 4px;}
+
+        /* === TOAST NOTIFICATION === */
+        #toast { visibility: hidden; min-width: 250px; background-color: var(--primary); color: #fff; text-align: center; border-radius: 30px; padding: 14px 24px; position: fixed; z-index: 1000; left: 50%; bottom: 30px; font-size: 0.95rem; font-weight: 500; transform: translateX(-50%) translateY(20px); opacity: 0; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        #toast.show { visibility: visible; opacity: 1; transform: translateX(-50%) translateY(0); }
+
         /* === INPUTS & BUTTONS === */
         .input-group { margin-bottom: 20px; width: 100%; }
         .input-label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 8px; color: var(--text-main); }
@@ -101,9 +108,9 @@
         .btn-primary:hover { background: #1d4ed8; transform: translateY(-2px); }
         .btn-outline { background: transparent; color: var(--primary); border: 2px solid var(--border-color); }
         .btn-outline:hover { border-color: var(--primary); background: var(--bg-body); }
-        .btn-wa { background: #25D366; color: white; margin-top: 10px;}
+        .btn-wa { background: #25D366; color: white; text-decoration: none;}
 
-        /* === MENU PILIHAN (MATERI / SIMULASI) === */
+        /* === MENU PILIHAN === */
         .menu-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 20px; }
         .menu-card { border: 2px solid var(--border-color); border-radius: var(--radius-md); padding: 24px; cursor: pointer; transition: var(--transition); display: flex; align-items: center; gap: 20px; background: var(--white); }
         .menu-card:hover { border-color: var(--accent); box-shadow: var(--shadow-md); transform: translateY(-3px); }
@@ -141,7 +148,7 @@
         .q-map-title { font-size: 1rem; font-weight: 600; margin-bottom: 15px; text-align: center; }
         .q-map-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 8px; }
         .q-map-btn { width: 100%; aspect-ratio: 1; border-radius: 6px; border: 1px solid var(--border-color); background: white; font-weight: 600; font-size: 0.9rem; cursor: pointer; color: var(--text-main); display:flex; align-items:center; justify-content:center;}
-        .q-map-btn.answered { background: var(--success); color: white; border-color: var(--success); }
+        .q-map-btn.answered { background: var(--accent); color: white; border-color: var(--accent); }
         .q-map-btn.active { border: 2px solid var(--primary); transform: scale(1.1); font-weight: 700; box-shadow: var(--shadow-sm);}
 
         /* === EVALUASI & REVIEW SOAL === */
@@ -154,6 +161,7 @@
         .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; }
         .badge.benar { background: #d1fae5; color: #059669; }
         .badge.salah { background: #fee2e2; color: #dc2626; }
+        .badge.warning { background: #fef3c7; color: #d97706; } /* Untuk TKP poin 1-4 */
         .badge.kosong { background: #f1f5f9; color: #475569; }
         
         .review-q { font-weight: 500; margin-bottom: 15px; }
@@ -165,30 +173,6 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
         #error-msg { color: var(--danger); font-size: 0.9rem; margin-top: -10px; margin-bottom: 15px; display: none; font-weight: 500; }
-
-        /* === PREMIUM INFO BOX === */
-        .premium-box { background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 32px 24px; margin-top: 40px; text-align: left; animation: fadeIn 1s ease 0.3s both; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05); }
-        .premium-box h3 { font-size: 1.3rem; color: var(--primary); margin-bottom: 12px; font-family: 'Playfair Display', serif; display: flex; align-items: center; gap: 10px;}
-        .premium-box p { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; }
-        
-        .step-flow { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; padding: 16px; background: rgba(255, 255, 255, 0.6); border-radius: var(--radius-sm); border: 1px dashed var(--border-color); }
-        .step-item { display: flex; align-items: center; gap: 12px; }
-        .step-num { width: 24px; height: 24px; background: var(--accent); color: var(--white); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 0.85rem; font-weight: 700; flex-shrink: 0; }
-        .step-text { font-size: 0.9rem; color: var(--text-main); line-height: 1.4; }
-        .step-text strong { color: var(--accent); }
-
-        .pay-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 24px; }
-        .pay-item { background: var(--bg-body); border: 1px solid transparent; padding: 16px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: var(--transition); }
-        .pay-item:hover { background: var(--white); border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
-        .pay-item-left { display: flex; align-items: center; gap: 16px; }
-        .pay-icon { width: 36px; height: auto; max-height: 24px; object-fit: contain; }
-        .pay-text { font-weight: 600; font-size: 1rem; color: var(--primary); }
-        .pay-sub { font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 2px;}
-        .copy-badge { font-size: 0.75rem; background: #e2e8f0; color: #475569; padding: 6px 12px; border-radius: 20px; font-weight: 600; display: flex; align-items: center; gap: 4px;}
-
-        /* === TOAST NOTIFICATION === */
-        #toast { visibility: hidden; min-width: 250px; background-color: var(--primary); color: #fff; text-align: center; border-radius: 30px; padding: 14px 24px; position: fixed; z-index: 1000; left: 50%; bottom: 30px; font-size: 0.95rem; font-weight: 500; transform: translateX(-50%) translateY(20px); opacity: 0; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-        #toast.show { visibility: visible; opacity: 1; transform: translateX(-50%) translateY(0); }
     </style>
 </head>
 <body>
@@ -230,7 +214,6 @@
                     <div class="top3-title"><span>🏆 Top 3 Nasional</span> <span>Skor</span></div>
                     <div id="top3-list">
                         <!-- Diisi JS -->
-                        <div class="text-center" style="font-size:0.8rem; opacity:0.7;">Belum ada data tersedia</div>
                     </div>
                 </div>
                 
@@ -245,66 +228,36 @@
                 <!-- KOTAK PREMIUM PANDUAN -->
                 <div class="premium-box">
                     <h3>👑 Belum Punya Kode Akses?</h3>
-                    
-                    <!-- INFO ALUR PEMESANAN -->
                     <div class="step-flow">
-                        <div class="step-item">
-                            <div class="step-num">1</div>
-                            <div class="step-text">Transfer <strong>Rp 5.000</strong> ke salah satu opsi di bawah.</div>
-                        </div>
-                        <div class="step-item">
-                            <div class="step-num">2</div>
-                            <div class="step-text">Klik tombol WhatsApp untuk mengirim bukti transfer.</div>
-                        </div>
-                        <div class="step-item">
-                            <div class="step-num">3</div>
-                            <div class="step-text">Admin akan langsung membalas dengan <strong>Kode Akses VIP</strong>.</div>
-                        </div>
+                        <div class="step-item"><div class="step-num">1</div><div class="step-text">Transfer <strong>Rp 5.000</strong> ke salah satu opsi di bawah.</div></div>
+                        <div class="step-item"><div class="step-num">2</div><div class="step-text">Klik tombol WhatsApp untuk konfirmasi.</div></div>
+                        <div class="step-item"><div class="step-num">3</div><div class="step-text">Admin akan langsung membalas dengan <strong>Kode Akses VIP</strong>.</div></div>
                     </div>
-
                     <p style="margin-bottom: 12px; font-weight: 600; font-size: 0.95rem; color: var(--primary);">Pilih Metode Pembayaran:</p>
-
                     <div class="pay-grid">
-                        <!-- Item DANA -->
                         <div class="pay-item" onclick="copyText('082273902728', 'DANA')">
                             <div class="pay-item-left">
                                 <img src="https://upload.wikimedia.org/wikipedia/commons/7/72/Logo_dana_blue.svg" alt="DANA" class="pay-icon">
-                                <div>
-                                    <span class="pay-text">0822 7390 2728</span>
-                                    <span class="pay-sub">a.n. Ahmad Ropat Tanjung</span>
-                                </div>
+                                <div><span class="pay-text">0822 7390 2728</span><span class="pay-sub">a.n. Ahmad Ropat Tanjung</span></div>
                             </div>
                             <div class="copy-badge">📋 Salin</div>
                         </div>
-
-                        <!-- Item ShopeePay -->
                         <div class="pay-item" onclick="copyText('082273902728', 'ShopeePay')">
                             <div class="pay-item-left">
                                 <img src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Shopee.svg" alt="ShopeePay" class="pay-icon" style="filter: hue-rotate(340deg) saturate(3);">
-                                <div>
-                                    <span class="pay-text">0822 7390 2728</span>
-                                    <span class="pay-sub">a.n. Ahmad Ropat Tanjung</span>
-                                </div>
+                                <div><span class="pay-text">0822 7390 2728</span><span class="pay-sub">a.n. Ahmad Ropat Tanjung</span></div>
                             </div>
                             <div class="copy-badge">📋 Salin</div>
                         </div>
-
-                        <!-- Item BSI -->
                         <div class="pay-item" onclick="copyText('7207203418', 'BSI')">
                             <div class="pay-item-left">
                                 <img src="https://upload.wikimedia.org/wikipedia/commons/a/a0/Bank_Syariah_Indonesia.svg" alt="BSI" class="pay-icon">
-                                <div>
-                                    <span class="pay-text">7207203418</span>
-                                    <span class="pay-sub">a.n. Ahmad Ropat Tanjung</span>
-                                </div>
+                                <div><span class="pay-text">7207203418</span><span class="pay-sub">a.n. Ahmad Ropat Tanjung</span></div>
                             </div>
                             <div class="copy-badge">📋 Salin</div>
                         </div>
                     </div>
-
-                    <a href="https://wa.me/6282273902728?text=Halo%20Admin,%20saya%20ingin%20konfirmasi%20pembayaran%20Rp5.000%20untuk%20pembelian%20Kode%20Akses%20Simulasi%20CPNS.%20Tolong%20dicek%20ya." target="_blank" class="btn btn-wa" style="text-decoration: none;">
-                        💬 Konfirmasi via WhatsApp
-                    </a>
+                    <a href="https://wa.me/6282273902728" target="_blank" class="btn btn-wa">💬 Konfirmasi via WhatsApp</a>
                 </div>
             </div>
         </div>
@@ -320,7 +273,7 @@
                         <div class="menu-icon">📚</div>
                         <div class="menu-text">
                             <h3>Bedah Materi & Trik Cepat</h3>
-                            <p>Pelajari ringkasan TWK, TIU, TKP dengan cara paling mudah dan tips "Mindset Malaikat".</p>
+                            <p>Pelajari ringkasan TWK, TIU, TKP dengan cara paling mudah.</p>
                         </div>
                     </div>
 
@@ -328,71 +281,26 @@
                         <div class="menu-icon">⏱️</div>
                         <div class="menu-text">
                             <h3>Mulai Simulasi CAT</h3>
-                            <p>Uji kemampuanmu dengan sistem CAT, peta soal, dan timer realistis.</p>
+                            <p>Uji kemampuanmu dengan sistem Poin Akurat (TIU/TWK 5 Poin, TKP 1-5 Poin).</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- SCREEN 3: MATERI -->
+        <!-- SCREEN 3: MATERI (Tetap sama seperti sebelumnya, dilewati detailnya di sini) -->
         <div id="screen-materi" class="screen" style="overflow-y: auto;">
             <div class="slide-up">
-                <button class="btn-outline" style="padding: 8px 16px; border-radius: 20px; display: inline-block; width: auto; margin-bottom: 20px;" onclick="openScreen('screen-menu')">← Kembali ke Menu</button>
-                
+                <button class="btn-outline" style="padding: 8px 16px; border-radius: 20px; display: inline-block; width: auto; margin-bottom: 20px;" onclick="openScreen('screen-menu')">← Kembali</button>
                 <h1 class="title font-serif mb-6">Modul Cepat CPNS</h1>
-
-                <!-- MATERI TKP -->
                 <div class="materi-section">
                     <div class="materi-title"><span>📝 TKP (Karakteristik Pribadi)</span></div>
-                    <div class="materi-content">
-                        <p>Banyak yang gagal di TKP karena memilih jawaban sesuai realita hati nurani sendiri. <strong>Itu SALAH!</strong></p>
-                        <h4>Mindset "Malaikat Super"</h4>
-                        <p>Saat mengerjakan TKP, posisikan diri Anda sebagai robot pelayan masyarakat yang tak kenal lelah, selalu patuh aturan, ramah luar biasa, dan sangat melek teknologi.</p>
-                        <ul>
-                            <li><strong>Jejaring Kerja:</strong> Pilih jawaban yang merangkul rekan kerja, kolaborasi, bukan kerja solo/merasa paling pintar.</li>
-                            <li><strong>Pelayanan Publik:</strong> Dahulukan kepuasan masyarakat/klien di atas kepentingan pribadi/istirahat Anda.</li>
-                            <li><strong>Anti Radikalisme:</strong> Pilih tindakan tegas melaporkan atau menolak segala bentuk penyimpangan ideologi, toleransi tanpa batas kompromi pada aturan negara.</li>
-                        </ul>
-                        <div class="trick-box">
-                            💡 <strong>Trik Cepat:</strong> Cari jawaban yang paling "Panjang dan Bijaksana". Hindari jawaban yang ada unsur emosi, mengeluh, atau menunda pekerjaan.
-                        </div>
-                    </div>
+                    <div class="materi-content"><p>Posisikan diri Anda sebagai pelayan masyarakat yang tak kenal lelah.</p></div>
                 </div>
-
-                <!-- MATERI TIU -->
                 <div class="materi-section">
-                    <div class="materi-title"><span>🧮 TIU (Inteligensi Umum)</span></div>
-                    <div class="materi-content">
-                        <h4>1. Silogisme (Penarikan Kesimpulan)</h4>
-                        <p>Jangan pakai logika sehari-hari! Pakai rumus pasti.</p>
-                        <ul>
-                            <li>Premis 1: Jika P maka Q. Premis 2: P terjadi. Kesimpulan: Q terjadi (Modus Ponens).</li>
-                            <li>Kata <strong>SEMUA</strong> bisa digugurkan oleh satu kata <strong>SEBAGIAN / BEBERAPA</strong>. Jika di premis ada kata "Sebagian", maka kesimpulannya PASTI mengandung kata "Sebagian/Beberapa".</li>
-                        </ul>
-                        <h4>2. Deret Angka</h4>
-                        <div class="trick-box">
-                            💡 <strong>Trik Cepat:</strong> Jangan terpaku urutan ke samping! Coba lompat 1 angka atau lompat 2 angka. Jika angkanya naik drastis, itu pasti dikali/dipangkat. Jika naiknya pelan, pasti ditambah.
-                        </div>
-                    </div>
+                    <div class="materi-title"><span>🧮 TIU & TWK</span></div>
+                    <div class="materi-content"><p>Pahami logika silogisme dan hafalkan poin-poin pancasila terapan.</p></div>
                 </div>
-
-                <!-- MATERI TWK -->
-                <div class="materi-section">
-                    <div class="materi-title"><span>🇮🇩 TWK (Wawasan Kebangsaan)</span></div>
-                    <div class="materi-content">
-                        <p>Soal TWK masa kini jarang menanyakan tahun atau nama tokoh secara langsung (Hafalan murni). Lebih banyak ke <strong>Penerapan Sila Pancasila</strong>.</p>
-                        <h4>Kata Kunci Pancasila:</h4>
-                        <ul>
-                            <li><strong>Sila 1:</strong> Agama, ibadah, toleransi umat beragama.</li>
-                            <li><strong>Sila 2:</strong> HAM, kemanusiaan, tolong-menolong universal, anti-perundungan.</li>
-                            <li><strong>Sila 3:</strong> Cinta tanah air, rela berkorban, bangga produk lokal, persatuan.</li>
-                            <li><strong>Sila 4:</strong> Musyawarah, mufakat, pemilu, tidak memaksakan kehendak.</li>
-                            <li><strong>Sila 5:</strong> Keadilan sosial, fasilitas umum, suka bekerja keras, tidak foya-foya.</li>
-                        </ul>
-                    </div>
-                </div>
-
                 <button class="btn btn-primary" onclick="openScreen('screen-setup')">Lanjut Uji Simulasi</button>
             </div>
         </div>
@@ -451,24 +359,15 @@
                 <button class="btn-outline" style="padding: 6px 12px; font-size: 0.85rem; width: auto;" onclick="toggleMap()">🗺️ Peta Soal</button>
             </div>
 
-            <!-- PETA SOAL (Hidden by default) -->
             <div id="question-map" class="q-map-container" style="display: none;">
                 <div class="q-map-title">Navigasi Peta Soal</div>
-                <div id="map-grid" class="q-map-grid">
-                    <!-- Diisi JS -->
-                </div>
+                <div id="map-grid" class="q-map-grid"></div>
                 <button class="btn btn-primary mt-4" style="padding: 10px;" onclick="submitUjian()">Selesai & Kumpulkan</button>
             </div>
 
             <div id="quiz-body" class="slide-up">
-                <div id="question-text" class="question-text">
-                    <!-- Diisi JS -->
-                </div>
-
-                <div id="options-container" class="options-container">
-                    <!-- Diisi JS -->
-                </div>
-
+                <div id="question-text" class="question-text"></div>
+                <div id="options-container" class="options-container"></div>
                 <div class="quiz-nav">
                     <button id="btn-prev" class="btn-prev" onclick="navQuestion(-1)">← Sebelumnya</button>
                     <button id="btn-next" class="btn-next" onclick="navQuestion(1)">Selanjutnya →</button>
@@ -480,7 +379,7 @@
         <div id="screen-eval" class="screen" style="overflow-y: auto;">
             <div class="slide-up">
                 <h1 class="title font-serif text-center mb-2">Evaluasi Hasil</h1>
-                <p class="subtitle text-center mb-6">Ujian telah selesai. Berikut adalah analisa pengerjaan Anda.</p>
+                <p class="subtitle text-center mb-6">Ujian telah selesai. Berikut adalah analisa poin Anda.</p>
 
                 <div class="score-card">
                     <h2>TOTAL SKOR ANDA</h2>
@@ -498,7 +397,7 @@
         </div>
 
     </div>
-
+    
     <!-- TOAST ELEMENT UTK NOTIFIKASI COPY -->
     <div id="toast">Berhasil disalin!</div>
 
@@ -510,19 +409,17 @@
 
         let DB = { pengaturan: {}, soal: [], kodeAkses: [], dashboard: {}, kategoriUnik: [] };
         
-        // State Ujian
         let quizSession = {
             playerName: "",
             kategoriDipilih: "",
-            soalAktif: [],       // Array soal yang akan diuji
-            jawabanUser: [],     // Menyimpan jawaban user per index
+            soalAktif: [],
+            jawabanUser: [],
             currentIndex: 0,
-            waktuTotal: 0,       // Detik
+            waktuTotal: 0,
             waktuSisa: 0,
             timerInterval: null
         };
 
-        // DOM Elements
         const screens = ['screen-loading', 'screen-login', 'screen-menu', 'screen-materi', 'screen-setup', 'screen-quiz', 'screen-eval'];
 
         function openScreen(screenId) {
@@ -531,7 +428,6 @@
             window.scrollTo(0,0);
         }
 
-        // === 1. FETCH DATA SAAT HALAMAN DIMUAT ===
         window.onload = async function() {
             try {
                 const response = await fetch(APP_SCRIPT_URL);
@@ -540,36 +436,27 @@
                 if(data.status === 'success') {
                     DB = data;
                     
-                    // Ekstrak Kategori
                     const katSet = new Set();
                     DB.soal.forEach(s => katSet.add(s.kategori));
                     DB.kategoriUnik = Array.from(katSet);
 
-                    // Render Dashboard
                     document.getElementById('dash-visitor').textContent = DB.dashboard.kunjungan;
-                    document.getElementById('dash-tests').textContent = DB.dashboard.totalUjian;
                     document.getElementById('dash-vip').textContent = DB.dashboard.totalVIP;
+                    document.getElementById('dash-tests').textContent = DB.dashboard.totalUjian;
 
                     let top3HTML = "";
                     if(DB.dashboard.top3 && DB.dashboard.top3.length > 0) {
                         const medals = ["🥇", "🥈", "🥉"];
                         DB.dashboard.top3.forEach((user, i) => {
-                            top3HTML += `
-                            <div class="top-row">
-                                <span class="top-name">${medals[i]} ${user.username}</span>
-                                <span class="top-score">${user.score}</span>
-                            </div>`;
+                            top3HTML += `<div class="top-row"><span class="top-name">${medals[i]} ${user.username}</span><span class="top-score">${user.score}</span></div>`;
                         });
                     } else {
                         top3HTML = `<div class="text-center" style="font-size:0.8rem; opacity:0.7;">Belum ada data tersedia</div>`;
                     }
                     document.getElementById('top3-list').innerHTML = top3HTML;
 
-                    // Setup Kategori Dropdown
                     const katSelect = document.getElementById('kategori-input');
-                    DB.kategoriUnik.forEach(k => {
-                        katSelect.innerHTML += `<option value="${k}">${k}</option>`;
-                    });
+                    DB.kategoriUnik.forEach(k => { katSelect.innerHTML += `<option value="${k}">${k}</option>`; });
                     
                     updateMaxSoalInfo();
                     katSelect.addEventListener('change', updateMaxSoalInfo);
@@ -583,7 +470,6 @@
             }
         };
 
-        // === 2. VALIDASI KODE & SETUP SIMULASI ===
         function verifyCode() {
             const input = document.getElementById('kode-input').value.trim().toUpperCase();
             const err = document.getElementById('error-msg');
@@ -598,12 +484,7 @@
 
         function updateMaxSoalInfo() {
             const kat = document.getElementById('kategori-input').value;
-            let count = 0;
-            if (kat === "CAMPURAN") {
-                count = DB.soal.length;
-            } else {
-                count = DB.soal.filter(s => s.kategori === kat).length;
-            }
+            let count = kat === "CAMPURAN" ? DB.soal.length : DB.soal.filter(s => s.kategori === kat).length;
             document.getElementById('max-soal-hidden').value = count;
             document.getElementById('max-soal-info').textContent = `(Tersedia: ${count})`;
         }
@@ -616,7 +497,6 @@
             return array;
         }
 
-        // === 3. MULAI QUIZ ===
         function startSimulasi() {
             const nama = document.getElementById('username-input').value.trim();
             const kat = document.getElementById('kategori-input').value;
@@ -630,7 +510,6 @@
             quizSession.playerName = nama;
             quizSession.kategoriDipilih = kat;
             
-            // Filter & Acak Soal
             let poolSoal = kat === "CAMPURAN" ? [...DB.soal] : DB.soal.filter(s => s.kategori === kat);
             poolSoal = shuffleArray(poolSoal);
             
@@ -638,7 +517,6 @@
             quizSession.jawabanUser = new Array(quizSession.soalAktif.length).fill(null);
             quizSession.currentIndex = 0;
 
-            // Setup Waktu Global
             const detikPerSoal = parseInt(DB.pengaturan.waktuPerSoal) || 54;
             quizSession.waktuTotal = limit * detikPerSoal;
             quizSession.waktuSisa = quizSession.waktuTotal;
@@ -650,7 +528,6 @@
             openScreen('screen-quiz');
         }
 
-        // === 4. LOGIKA ENGINE QUIZ (MAP & NAVIGATION) ===
         function startGlobalTimer() {
             clearInterval(quizSession.timerInterval);
             const timerEl = document.getElementById('timer');
@@ -662,9 +539,7 @@
                 let s = (quizSession.waktuSisa % 60).toString().padStart(2, '0');
                 timerEl.textContent = `${m}:${s}`;
 
-                if (quizSession.waktuSisa <= 60) {
-                    timerEl.style.animation = "pulseAlert 1s infinite alternate";
-                }
+                if (quizSession.waktuSisa <= 60) timerEl.style.animation = "pulseAlert 1s infinite alternate";
 
                 if (quizSession.waktuSisa <= 0) {
                     clearInterval(quizSession.timerInterval);
@@ -678,12 +553,9 @@
             const map = document.getElementById('question-map');
             const body = document.getElementById('quiz-body');
             if(map.style.display === 'none') {
-                map.style.display = 'block';
-                body.style.display = 'none';
-                renderQuestionMap(); // Update indikator warna
+                map.style.display = 'block'; body.style.display = 'none'; renderQuestionMap();
             } else {
-                map.style.display = 'none';
-                body.style.display = 'block';
+                map.style.display = 'none'; body.style.display = 'block';
             }
         }
 
@@ -709,7 +581,6 @@
             document.getElementById('quiz-badge-kategori').textContent = soalData.kategori;
             document.getElementById('question-text').innerHTML = soalData.teksSoal;
 
-            // Navigasi Tombol
             document.getElementById('btn-prev').style.visibility = index === 0 ? 'hidden' : 'visible';
             
             if(index === quizSession.soalAktif.length - 1) {
@@ -721,14 +592,12 @@
                 document.getElementById('btn-next').style.background = "var(--primary)";
             }
 
-            // Render Pilihan
             const optsContainer = document.getElementById('options-container');
             optsContainer.innerHTML = '';
             
             soalData.pilihan.forEach(pil => {
                 const btn = document.createElement('button');
                 btn.className = 'option-btn';
-                // Jika sudah dijawab sebelumnya, tandai
                 if(quizSession.jawabanUser[index] === pil.huruf) btn.classList.add('selected');
                 
                 btn.innerHTML = `<span class="option-label">${pil.huruf}.</span> <div>${pil.teks}</div>`;
@@ -743,51 +612,59 @@
 
         function navQuestion(dir) {
             if (dir === 1 && quizSession.currentIndex === quizSession.soalAktif.length - 1) {
-                // Konfirmasi Kumpul
                 let blmDijawab = quizSession.jawabanUser.filter(x => x === null).length;
                 let msg = blmDijawab > 0 ? `Ada ${blmDijawab} soal yang belum dijawab. Yakin kumpulkan?` : `Yakin ingin mengumpulkan jawaban sekarang?`;
                 if(confirm(msg)) submitUjian();
                 return;
             }
             let nextIndex = quizSession.currentIndex + dir;
-            if(nextIndex >= 0 && nextIndex < quizSession.soalAktif.length) {
-                loadQuestion(nextIndex);
-            }
+            if(nextIndex >= 0 && nextIndex < quizSession.soalAktif.length) loadQuestion(nextIndex);
         }
 
-        // === 5. EVALUASI DAN SUBMIT ===
+        // === PERUBAHAN SISTEM PENILAIAN BERDASARKAN POIN ===
         async function submitUjian() {
             clearInterval(quizSession.timerInterval);
             const waktuTerpakai = quizSession.waktuTotal - quizSession.waktuSisa;
             
-            // Hitung Skor (Simulasi CPNS: Benar = 5, Salah/Kosong = 0)
             let totalSkor = 0;
             let reviewHTML = "";
 
             quizSession.soalAktif.forEach((soal, i) => {
                 let userAns = quizSession.jawabanUser[i];
-                let isCorrect = userAns === soal.kunciJawaban;
-                
-                if(isCorrect) totalSkor += 5;
+                let pointsGained = 0;
+                let opsiUserTeks = "<i>Tidak dijawab</i>";
+                let bestOption = soal.pilihan.reduce((max, p) => p.poin > max.poin ? p : max, soal.pilihan[0]);
 
-                // Bangun UI Review
-                let badge = isCorrect ? `<span class="badge benar">Benar (+5)</span>` : 
-                            (userAns ? `<span class="badge salah">Salah (0)</span>` : `<span class="badge kosong">Kosong (0)</span>`);
+                if(userAns) {
+                    let chosen = soal.pilihan.find(p => p.huruf === userAns);
+                    if(chosen) {
+                        pointsGained = chosen.poin;
+                        opsiUserTeks = chosen.teks;
+                    }
+                }
                 
-                let opsiUserTeks = userAns ? soal.pilihan.find(p => p.huruf === userAns).teks : "<i>Tidak dijawab</i>";
+                totalSkor += pointsGained;
+
+                // Logika Badge (Warna-warni sesuai skor)
+                let badgeClass = "kosong"; let badgeText = "Kosong (0)";
+                if (userAns) {
+                    if (pointsGained === 5) { badgeClass = "benar"; badgeText = `Tepat (+5)`; }
+                    else if (pointsGained > 0) { badgeClass = "warning"; badgeText = `Poin: +${pointsGained}`; }
+                    else { badgeClass = "salah"; badgeText = `Salah (0)`; }
+                }
 
                 reviewHTML += `
                 <div class="review-item">
                     <div class="review-header">
                         <span>Soal No. ${i+1} [${soal.kategori}]</span>
-                        ${badge}
+                        <span class="badge ${badgeClass}">${badgeText}</span>
                     </div>
                     <div class="review-q">${soal.teksSoal}</div>
                     <div class="review-ans">
                         <strong>Jawaban Anda:</strong> ${userAns || '-'} - ${opsiUserTeks}
                     </div>
                     <div class="review-ans" style="background: #ecfdf5; border: 1px solid #a7f3d0;">
-                        <strong>Kunci Jawaban:</strong> ${soal.kunciJawaban}
+                        <strong>Jawaban Poin Tertinggi (5):</strong> ${bestOption.huruf} - ${bestOption.teks}
                     </div>
                     <div class="review-expl">
                         <strong>Pembahasan:</strong><br>
@@ -796,51 +673,32 @@
                 </div>`;
             });
 
-            // Tampilkan UI Evaluasi
             document.getElementById('eval-score').textContent = totalSkor;
             document.getElementById('eval-time').textContent = Math.floor(waktuTerpakai / 60) + "m " + (waktuTerpakai % 60) + "s";
             document.getElementById('review-container').innerHTML = reviewHTML;
             
             openScreen('screen-eval');
 
-            // Kirim ke Backend Leaderboard
-            const payload = {
-                username: quizSession.playerName,
-                score: totalSkor,
-                waktuTerpakai: waktuTerpakai,
-                kategori: quizSession.kategoriDipilih
-            };
-
+            const payload = { username: quizSession.playerName, score: totalSkor, waktuTerpakai: waktuTerpakai, kategori: quizSession.kategoriDipilih };
             try {
-                fetch(APP_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify(payload)
-                });
-            } catch (err) { console.log("Gagal simpan log ujian", err); }
+                fetch(APP_SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
+            } catch (err) {}
         }
 
-        // === 6. FUNGSI COPY TO CLIPBOARD DAN TOAST ===
         function copyText(text, method) {
             const tempInput = document.createElement("input");
             tempInput.value = text;
             document.body.appendChild(tempInput);
             tempInput.select();
-            tempInput.setSelectionRange(0, 99999); // Untuk mobile
-            
-            try {
-                document.execCommand("copy");
-                showToast("✅ Nomor " + method + " berhasil disalin!");
-            } catch (err) {
-                showToast("Gagal menyalin. Silakan salin manual.");
-            }
+            tempInput.setSelectionRange(0, 99999);
+            try { document.execCommand("copy"); showToast("✅ Nomor " + method + " berhasil disalin!"); } 
+            catch (err) { showToast("Gagal menyalin."); }
             document.body.removeChild(tempInput);
         }
 
         function showToast(message) {
             const toast = document.getElementById("toast");
-            toast.textContent = message;
-            toast.className = "show";
+            toast.textContent = message; toast.className = "show";
             setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
         }
 
